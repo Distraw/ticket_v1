@@ -21,9 +21,9 @@ impl Ticket {
         Ticket::validate_input(&title, &description, &status);
 
         Self {
-            title: title.clone(),
-            description: description.clone(),
-            status: status.clone(),
+            title: title,
+            description: description,
+            status: status,
         }
     }
 
