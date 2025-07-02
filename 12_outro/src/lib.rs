@@ -80,7 +80,7 @@ impl Order {
     }
 
     fn validate_unit_price(unit_price: &u32) {
-        if *unit_price <= 0 {
+        if *unit_price == 0 {
             panic!("unit_price must be strictly greater than zero");
         }
     }

@@ -28,7 +28,7 @@ impl Ticket {
     }
 
     fn validate_input(title: &String, description: &String, status: &String) {
-        if title.len() <= 0 {
+        if title.is_empty() {
             panic!("Title cannot be empty");
         }
 
