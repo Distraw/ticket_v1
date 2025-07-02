@@ -1,33 +1,30 @@
+use std::str::FromStr;
+use strum_macros::EnumString;
+
+#[derive(EnumString)]
+enum Status {
+    ToDo,
+    InProgress,
+    Done,
+}
+
 struct Ticket {
     title: String,
     description: String,
-    status: String,
+    status: Status,
 }
 
 impl Ticket {
-    // TODO: implement the `new` function.
-    //  The following requirements should be met:
-    //   - Only `To-Do`, `In Progress`, and `Done` statuses are allowed.
-    //   - The `title` and `description` fields should not be empty.
-    //   - the `title` should be at most 50 bytes long.
-    //   - the `description` should be at most 500 bytes long.
-    //  The method should panic if any of the requirements are not met.
-    //  You can find the needed panic messages in the tests.
-    //
-    // You'll have to use what you learned in the previous exercises,
-    // as well as some `String` methods. Use the documentation of Rust's standard library
-    // to find the most appropriate options -> https://doc.rust-lang.org/std/string/struct.String.html
     fn new(title: String, description: String, status: String) -> Self {
-        Ticket::validate_input(&title, &description, &status);
-
+        Ticket::validate_input(&title, &description);
         Self {
             title: title,
             description: description,
-            status: status,
+            status: Status::from_str(&status).expect("Only ToDo, InProgress and Done are allowed"),
         }
     }
 
-    fn validate_input(title: &String, description: &String, status: &String) {
+    fn validate_input(title: &String, description: &String) {
         if title.is_empty() {
             panic!("Title cannot be empty");
         }
@@ -43,13 +40,6 @@ impl Ticket {
         if description.len() > 500 {
             panic!("Description cannot be longer than 500 bytes");
         }
-
-        let status = status.trim();
-        if status != "To-Do" &&
-           status != "In Progress" &&
-           status != "Done" {
-            panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed");
-        }
     }
 }
 
@@ -61,25 +51,25 @@ mod tests {
     #[test]
     #[should_panic(expected = "Title cannot be empty")]
     fn title_cannot_be_empty() {
-        Ticket::new("".into(), valid_description(), "To-Do".into());
+        Ticket::new("".into(), valid_description(), "ToDo".into());
     }
 
     #[test]
     #[should_panic(expected = "Description cannot be empty")]
     fn description_cannot_be_empty() {
-        Ticket::new(valid_title(), "".into(), "To-Do".into());
+        Ticket::new(valid_title(), "".into(), "ToDo".into());
     }
 
     #[test]
     #[should_panic(expected = "Title cannot be longer than 50 bytes")]
     fn title_cannot_be_longer_than_fifty_chars() {
-        Ticket::new(overly_long_title(), valid_description(), "To-Do".into());
+        Ticket::new(overly_long_title(), valid_description(), "ToDo".into());
     }
 
     #[test]
     #[should_panic(expected = "Description cannot be longer than 500 bytes")]
     fn description_cannot_be_longer_than_500_chars() {
-        Ticket::new(valid_title(), overly_long_description(), "To-Do".into());
+        Ticket::new(valid_title(), overly_long_description(), "ToDo".into());
     }
 
     #[test]
@@ -95,6 +85,6 @@ mod tests {
 
     #[test]
     fn in_progress_is_allowed() {
-        Ticket::new(valid_title(), valid_description(), "In Progress".into());
+        Ticket::new(valid_title(), valid_description(), "InProgress".into());
     }
 }
